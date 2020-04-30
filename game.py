@@ -17,7 +17,7 @@ def play():
         print(
             'Welcome to the Game!'
         )
-        name = input('Wat is your name?\n').capitalize()
+        name = input('What is your name?\n').capitalize()
         print(
             "Hello, %s!" % name
         )
