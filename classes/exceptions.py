@@ -11,6 +11,8 @@ class GameOver(Exception):
     def __init__(self, text, player):
         self.text = text
         self.player = player
+
+    def write_score(self):
         now = datetime.datetime.today()
         rez = ('%s Player: %s; Score: %s\n' % ((now.strftime("%x")+' ' + now.strftime("%X")),
                                                self.player.name, self.player.score))

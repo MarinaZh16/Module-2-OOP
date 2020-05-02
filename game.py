@@ -3,10 +3,6 @@ module with 'Rock-paper-scissors'-based game
 """
 
 from module2.classes import models, exceptions
-P = models.Player
-E = models.Enemy
-GAME_OVER = exceptions.GameOver
-RESTART = exceptions.RestartGame
 
 
 def play():
@@ -17,12 +13,12 @@ def play():
         print(
             'Welcome to the Game!'
         )
-        name = input('What is your name?\n').capitalize()
+        name = input('Wat is your name?\n').capitalize()
         print(
             "Hello, %s!" % name
         )
-        player = P(name)
-        enemy = E()
+        player = models.Player(name)
+        enemy = models.Enemy()
         start = 0
         while start != player.allowed_commands[0]:
             start = input('Enter "start" to START game\n').lower()
@@ -30,12 +26,26 @@ def play():
             'Enter "HELP", to watch allowed commands'
         )
         while True:
-            player.attack(enemy)
-            if enemy.lives != 0:
-                player.defence(enemy)
-            else:
+            try:
+                player.attack(enemy)
+            except exceptions.EnemyDown:
+                enemy.level += 1
                 enemy.lives = enemy.level
-    except RESTART:
+                player.score += 5
+                player.level += 1
+                print('-'
+                      * 65)
+                print('You killed enemy! Your Score: %s. Level: %s' % (player.score,
+                                                                       player.level))
+                print('-'
+                      * 65)
+            else:
+                print('Your lives: %s | Enemy lives: %s'
+                      % (player.lives, enemy.lives))
+                player.defence(enemy)
+                print('Your lives: %s | Enemy lives: %s'
+                      % (player.lives, enemy.lives))
+    except exceptions.RestartGame:
         print(
             "You reloaded game! Your score wasn't save"
         )
@@ -47,7 +57,8 @@ if __name__ == '__main__':
         play()
     except KeyboardInterrupt:
         pass
-    except GAME_OVER as game_over:
+    except exceptions.GameOver as game_over:
+        game_over.write_score()
         print(game_over.text)
     finally:
         print(

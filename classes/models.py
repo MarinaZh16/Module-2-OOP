@@ -25,23 +25,9 @@ class Enemy(object):
         """
         life reduction function, depends on Player-obj, created in game function
         """
-        try:
-            self.lives -= 1
-            if self.lives == 0:
-                raise EnemyDown
-        except EnemyDown:
-            self.level += 1
-            player.score += 5
-            player.level += 1
-            print('-'
-                  * 65)
-            print('You killed enemy! Your Score: %s. Level: %s' % (player.score,
-                                                                   player.level))
-            print('-'
-                  * 65)
-        else:
-            print('Your lives: %s | Enemy lives: %s\n'
-                  % (player.lives, self.lives))
+        self.lives -= 1
+        if self.lives == 0:
+            raise EnemyDown
 
 
 class Player(object):
@@ -75,17 +61,18 @@ class Player(object):
             raise KeyboardInterrupt
 
     @staticmethod
-    def fight(m_1, m_2):
+    def fight(attack, defense):
         """
         function in which the result of the battle is calculated
         """
-        score = 0
-        if m_1 == 1 and m_2 == 3:
-            score += 1
-        elif m_1 == 2 and m_2 == 1:
-            score += 1
-        elif m_1 == 3 and m_2 == 2:
-            score += 1
+        if attack == defense:
+            score = 0
+        elif (attack == 1 and defense == 3) or\
+             (attack == 2 and defense == 1) or\
+             (attack == 3 and defense == 2):
+            score = 1
+        else:
+            score = -1
         return score
 
     def decrease_lives(self):
@@ -101,17 +88,16 @@ class Player(object):
         accepts user input to attack and Enemy-obj's to defence 'select_attack' function result,
         counts score and lives
         """
-        m_1 = 0
-        while m_1 not in self.allowed_attacks:
-            m_1 = input('Select Attack to Use: 1 - "ROGUE", 2 - "WARRIOR", '
-                        '3 - "WIZARD" :\n').lower()
-            self.command(m_1)
-        m_1 = int(m_1)
-        m_2 = enemy_obj.select_attack()
-        score = self.fight(m_1, m_2)
+        attack = 0
+        while attack not in self.allowed_attacks:
+            attack = input('Select Attack to Use: 1 - "ROGUE", 2 - "WARRIOR", '
+                           '3 - "WIZARD" :\n').lower()
+            self.command(attack)
+        attack = int(attack)
+        defence = enemy_obj.select_attack()
+        score = self.fight(attack, defence)
         if score == 0:
-            print("It's a draw!\nYour lives: %s | Enemy lives: %s\n"
-                  % (self.lives, enemy_obj.lives))
+            print("It's a draw!")
         elif score == 1:
             print(
                 "You attacked successfully!"
@@ -119,34 +105,28 @@ class Player(object):
             self.score += score
             enemy_obj.decrease_lives(self)
         elif score == -1:
-            print("You missed!\nYour lives: %s | Enemy lives: %s\n"
-                  % (self.lives, enemy_obj.lives))
+            print("You missed!")
 
     def defence(self, enemy_obj):
         """
         the same as 'attack' function, but here Enemy-obj attacks and Player-obj defenses
         """
-        m_1 = enemy_obj.select_attack()
-        m_2 = 0
-        while m_2 not in self.allowed_attacks:
-            m_2 = input('Select Defence to Use: 1 - "ROGUE",'
-                        ' 2 - "WARRIOR", 3 - "WIZARD"\n').lower()
-            self.command(m_2)
-        m_2 = int(m_2)
-        score = self.fight(m_1, m_2)
+        attack = enemy_obj.select_attack()
+        defence = 0
+        while defence not in self.allowed_attacks:
+            defence = input('Select Defence to Use: 1 - "ROGUE",'
+                            ' 2 - "WARRIOR", 3 - "WIZARD"\n').lower()
+            self.command(defence)
+        defence = int(defence)
+        score = self.fight(attack, defence)
         if score == 0:
-            print("It's a draw!\nYour lives: %s | Enemy lives: %s\n"
-                  % (self.lives, enemy_obj.lives))
+            print("It's a draw!")
         elif score == 1:
             print(
                 "He hit you"
             )
             self.decrease_lives()
-            print('Your lives: %s | Enemy lives: %s\n'
-                  % (self.lives, enemy_obj.lives))
         elif score == -1:
             print(
                 "You dodged attack!"
             )
-            print('Your lives: %s | Enemy lives: %s\n'
-                  % (self.lives, enemy_obj.lives))
