@@ -6,13 +6,16 @@ import datetime
 
 class GameOver(Exception):
     """
-    class - inherited from Exception, writes score
+    class - inherited from Exception
     """
     def __init__(self, text, player):
         self.text = text
         self.player = player
 
     def write_score(self):
+        """
+        writes score
+        """
         now = datetime.datetime.today()
         rez = ('%s Player: %s; Score: %s\n' % ((now.strftime("%x")+' ' + now.strftime("%X")),
                                                self.player.name, self.player.score))
