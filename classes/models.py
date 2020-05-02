@@ -97,7 +97,9 @@ class Player(object):
         defence = enemy_obj.select_attack()
         score = self.fight(attack, defence)
         if score == 0:
-            print("It's a draw!")
+            print(
+                "It's a draw!"
+            )
         elif score == 1:
             print(
                 "You attacked successfully!"
@@ -105,7 +107,9 @@ class Player(object):
             self.score += score
             enemy_obj.decrease_lives(self)
         elif score == -1:
-            print("You missed!")
+            print(
+                "You missed!"
+            )
 
     def defence(self, enemy_obj):
         """
@@ -120,7 +124,9 @@ class Player(object):
         defence = int(defence)
         score = self.fight(attack, defence)
         if score == 0:
-            print("It's a draw!")
+            print(
+                "It's a draw!"
+            )
         elif score == 1:
             print(
                 "He hit you"
